@@ -8,6 +8,7 @@ import Footer from "@/app/component/footer";
 import { repetiteurService, type RepetiteurDetail, type RepetiteurCard, type AvisPublic } from "@/lib/services/repetiteur.service";
 import { favoriService } from "@/lib/services/dashboard.service";
 import { authService, type Utilisateur } from "@/lib/services/auth.service";
+import Header from "@/app/component/header";
 
 function Etoiles({ note, size = "base" }: { note: number; size?: "sm" | "base" | "lg" }) {
   const cls = size === "lg" ? "text-2xl" : size === "sm" ? "text-sm" : "text-base";
@@ -562,31 +563,11 @@ export default function DetailRepetiteur({ params }: { params: Promise<{ id: str
   const nomComplet = `${rep.prenom} ${rep.nom}`;
 
   return (
-    <div className="min-h-screen bg-zinc-50 font-sans">
-      <header className="w-full bg-white border-b border-zinc-200 sticky top-0 z-40 shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-1">
-            <span className="text-xl font-extrabold text-orange-500">Edu</span>
-            <span className="text-xl font-extrabold text-zinc-800">Match</span>
-            <span className="ml-1 text-xs font-semibold text-white bg-green-600 rounded px-1.5 py-0.5">CI</span>
-          </Link>
-          <div className="flex items-center gap-2">
-            {connecte ? (
-              <Link href="/dashboard/eleve" className="text-sm font-semibold text-white bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded-full transition-colors">Mon espace</Link>
-            ) : (
-              <>
-                <Link href="/connexion" className="text-sm font-medium text-zinc-700 border border-zinc-300 hover:border-orange-400 hover:text-orange-500 px-4 py-2 rounded-full transition-colors">Connexion</Link>
-                <Link href="/inscription" className="text-sm font-semibold text-white bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded-full transition-colors">S&apos;inscrire</Link>
-              </>
-            )}
-          </div>
-        </div>
-      </header>
-
-     
+    <div className="min-h-screen bg-white font-sans">
+      <Header></Header>
       <main className="max-w-6xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
         <aside className="lg:col-span-1 order-1 lg:order-2 flex flex-col gap-4 lg:sticky lg:top-6 lg:self-start">
-          <div className="bg-zinc-50 rounded-2xl text-shadow-2xs shadow border-gray-300 p-6 flex flex-col items-center gap-4">
+          <div className="bg-white rounded-3xl text-shadow-2xs drop-shadow-sm border-gray-300 p-6 flex flex-col items-center gap-4">
             <div className="relative w-50 h-50 px-5  overflow-hidden rounded-4xl">
               <Image src={rep.photo_url ?? "https://i.pravatar.cc/300"} alt={nomComplet} fill className="object-cover" />
             </div>
@@ -599,9 +580,7 @@ export default function DetailRepetiteur({ params }: { params: Promise<{ id: str
                   </span>
                 )}
               </div>
-              <span className="text-sm font-semibold text-orange-500 bg-orange-50 border border-orange-100 px-3 py-0.5 rounded-full">
-                {rep.matieres?.[0] ?? "—"}
-              </span>
+           
               <div className="flex items-center gap-2 mt-1">
                 <Etoiles note={Math.round(rep.note)} />
                 <span className="text-sm text-zinc-400">({rep.nb_avis} avis)</span>
@@ -612,7 +591,7 @@ export default function DetailRepetiteur({ params }: { params: Promise<{ id: str
               <span className="text-sm text-zinc-500">Tarif horaire</span>
               <span className="text-2xl font-extrabold text-zinc-800">
                 {rep.prix_par_heure?.toLocaleString("de-DE", { maximumFractionDigits: 0 }) ?? "—"}
-                <span className="text-sm font-normal text-zinc-400"> FCFA/h</span>
+                <span className="text-sm font-normal text-zinc-400"> F/Mois</span>
               </span>
             </div>
             <div className="flex gap-2 w-full">
@@ -719,25 +698,23 @@ export default function DetailRepetiteur({ params }: { params: Promise<{ id: str
             </p>
           </div>
            {rep.niveaux && rep.niveaux.length > 0 && (
-            <div className="bg-zinc-50  p-5 ">
-              <h3 className="text-xl  text-zinc-700 font-bold mb-3">À propos du cours</h3>
+            <div className="bg-white  p-5 ">
+              <h3 className="text-2xl  text-zinc-700 font-bold mb-3">À propos du cours</h3>
               <div className="flex gap-5">
                 <div className="flex flex-wrap gap-2  rounded-2xl p-2">
                 {rep.niveaux.map((n) => (
-                  <span key={n} className="text-xs font-medium bg-gray-50 text-gray-500 border  px-3 py-1 rounded-full">{n}</span>
+                  <span key={n} className="text-xs font-medium bg-gray-50 text-gray-500 border  py-2  px-6 rounded-full">{n}</span>
                 ))}
               </div>
-              <div className="flex flex-wrap gap-2 border rounded-2xl p-2">
-             Français
-              </div>
+             
               </div>
             </div>
           )}
 
           {rep.bio && (
-            <div className="rounded-2xl   border-zinc-100 p-6">
-              <p className="text-xl font-bold mb-4">À propos de {rep.nom}</p>
-              <p className=" text-gray-700 text-xl font-extralight leading-relaxed">{rep.bio}</p>
+            <div className=" border-zinc-100 p-6">
+              <p className="text-2xl font-bold mb-4">À propos de {rep.nom}</p>
+              <p className=" text-xl font-extralight leading-relaxed">{rep.bio}</p>
             </div>
           )}
 
@@ -757,7 +734,7 @@ export default function DetailRepetiteur({ params }: { params: Promise<{ id: str
           {/* ── AVIS ─────────────────────────────────────────────────────── */}
           <div className=" p-6">
             <div className="flex items-center justify-between mb-5">
-              <h2 className="text-lg font-bold text-zinc-800">Avis</h2>
+              <h2 className="text-2xl font-bold text-zinc-800">Avis</h2>
               <div className="flex items-center gap-2">
                
                 <span className="text-sm font-bold text-zinc-700"> ★ {rep.note.toFixed(1)}</span>

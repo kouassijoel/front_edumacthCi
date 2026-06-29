@@ -1,11 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { GraduationCap, Bell, Menu, X } from "lucide-react";
-import { useEffect, useState, useRef } from "react";
+import { GraduationCap, Menu, X } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { authService } from "@/lib/services/auth.service";
-import { notificationService, type UserNotification } from "@/lib/services/notification.service";
 
 function getRoleFromLocalToken(): "eleve" | "repetiteur" | null {
   try {
@@ -22,11 +21,7 @@ export default function Header() {
   const router = useRouter();
   const [connecte, setConnecte]           = useState(false);
   const [dashboardHref, setDashboardHref] = useState("/dashboard");
-  const [nonLues, setNonLues]             = useState(0);
-  const [notifs, setNotifs]               = useState<UserNotification[]>([]);
-  const [dropdown, setDropdown]           = useState(false);
   const [mobileOpen, setMobileOpen]       = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("access_token");
@@ -34,26 +29,9 @@ export default function Header() {
       setConnecte(true);
       const role = getRoleFromLocalToken();
       setDashboardHref(role === "eleve" ? "/dashboard/eleve" : "/dashboard");
-      notificationService.getMesNotifications()
-        .then((data) => {
-          setNonLues(data.non_lues);
-          setNotifs(data.notifications.slice(0, 5));
-        })
-        .catch(() => {});
     }
   }, []);
 
-  useEffect(() => {
-    function handler(e: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setDropdown(false);
-      }
-    }
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, []);
-
-  // Fermer le menu mobile quand on change de page
   function closeMobile() {
     setMobileOpen(false);
   }
@@ -65,21 +43,9 @@ export default function Header() {
     router.push("/");
   }
 
-  async function lireUne(id: string) {
-    await notificationService.marquerLue(id);
-    setNotifs((prev) => prev.map((n) => n.id === id ? { ...n, lu: true } : n));
-    setNonLues((prev) => Math.max(0, prev - 1));
-  }
-
-  async function toutLire() {
-    await notificationService.marquerToutLu();
-    setNotifs((prev) => prev.map((n) => ({ ...n, lu: true })));
-    setNonLues(0);
-  }
-
   return (
     <>
-      <header className="w-full bg-white border-b border-zinc-100 sticky top-0 z-50 shadow-sm">
+      <header className="w-full bg-white  border-zinc-100  top-0 z-50 ">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
 
           {/* Logo */}
@@ -104,73 +70,10 @@ export default function Header() {
             <Link href="/comment-ca-marche" className="hover:text-orange-500 transition-colors cursor-pointer">Comment ça marche</Link>
           </nav>
 
-          {/* Actions desktop */}
+          {/* Actions */}
           <div className="flex items-center gap-2">
             {connecte ? (
               <>
-                {/* Cloche notifications */}
-                <div className="relative" ref={dropdownRef}>
-                  <button
-                    onClick={() => setDropdown((v) => !v)}
-                    className="relative p-2 rounded-xl hover:bg-zinc-100 transition-colors cursor-pointer text-zinc-600"
-                  >
-                    <Bell size={20} />
-                    {nonLues > 0 && (
-                      <span className="absolute -top-0.5 -right-0.5 min-w-4.5 h-4.5 bg-orange-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1">
-                        {nonLues > 99 ? "99+" : nonLues}
-                      </span>
-                    )}
-                  </button>
-
-                  {dropdown && (
-                    <div className="absolute right-0 top-12 w-80 bg-white rounded-2xl shadow-xl border border-zinc-100 z-50 overflow-hidden">
-                      <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100">
-                        <p className="text-sm font-bold text-zinc-800">Notifications</p>
-                        {nonLues > 0 && (
-                          <button onClick={toutLire}
-                            className="text-xs text-orange-500 hover:text-orange-600 font-semibold cursor-pointer transition-colors">
-                            Tout lire
-                          </button>
-                        )}
-                      </div>
-
-                      <div className="max-h-72 overflow-y-auto divide-y divide-zinc-50">
-                        {notifs.length === 0 ? (
-                          <div className="py-8 text-center">
-                            <Bell size={24} className="text-zinc-200 mx-auto mb-2" />
-                            <p className="text-xs text-zinc-400">Aucune notification</p>
-                          </div>
-                        ) : notifs.map((n) => (
-                          <div
-                            key={n.id}
-                            onClick={() => !n.lu && lireUne(n.id)}
-                            className={`px-4 py-3 flex gap-3 cursor-pointer transition-colors ${n.lu ? "hover:bg-zinc-50" : "bg-orange-50 hover:bg-orange-100/60"}`}
-                          >
-                            <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${n.lu ? "bg-zinc-200" : "bg-orange-500"}`} />
-                            <div className="min-w-0">
-                              <p className={`text-xs font-semibold truncate ${n.lu ? "text-zinc-600" : "text-zinc-900"}`}>{n.titre}</p>
-                              <p className="text-xs text-zinc-400 mt-0.5 line-clamp-2 leading-relaxed">{n.message}</p>
-                              <p className="text-[10px] text-zinc-300 mt-1">
-                                {new Date(n.created_at).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })}
-                              </p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-
-                      <div className="border-t border-zinc-100 px-4 py-2.5">
-                        <Link
-                          href="/dashboard/notifications"
-                          onClick={() => setDropdown(false)}
-                          className="text-xs text-orange-500 hover:text-orange-600 font-semibold cursor-pointer transition-colors"
-                        >
-                          Voir toutes les notifications →
-                        </Link>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
                 <Link href={dashboardHref}
                   className="hidden sm:block text-sm font-medium text-zinc-700 hover:text-orange-500 px-3 py-2 transition-colors cursor-pointer">
                   Mon tableau de bord
