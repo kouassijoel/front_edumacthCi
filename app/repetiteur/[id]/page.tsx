@@ -819,14 +819,15 @@ export default function DetailRepetiteur({ params }: { params: Promise<{ id: str
                 className="group flex flex-col overflow-hidden  transition-shadow shrink-0 w-44 sm:w-52 lg:w-auto lg:shrink">
 
                 {/* Photo + infos superposées */}
-                <div className="relative h-56 w-full overflow-hidden rounded-2xl">
+                <div className="relative h-56 w-full">
                   <Image
                     src={s.photo_url ?? `https://i.pravatar.cc/300?u=${s.id}`}
                     alt={`${s.prenom} ${s.nom}`}
                     fill
-                    className="object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
+                    className="object-cover  group-hover:scale-105 w-100 transition-transform duration-500"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+                  
                   <div className="absolute bottom-3 left-3 right-3">
                     <p className="text-white font-extrabold text-sm leading-tight drop-shadow">
                       {s.prenom} {s.nom}
@@ -838,7 +839,7 @@ export default function DetailRepetiteur({ params }: { params: Promise<{ id: str
                     )}
                   </div>
                 </div>
-
+                
                 {/* Bas de carte */}
                 <div className="flex items-center justify-between px-3 py-2.5">
                   <span className="flex items-center gap-1 text-xs font-bold text-zinc-700">
@@ -848,9 +849,11 @@ export default function DetailRepetiteur({ params }: { params: Promise<{ id: str
                   </span>
                   <span className="text-xs font-extrabold text-orange-500">
                     {s.prix_par_heure?.toLocaleString("fr-FR") ?? "—"}
-                    <span className="font-normal text-zinc-400"> F/h</span>
+                    <span className="font-normal text-zinc-400"> F/Mois</span>
                   </span>
+                 
                 </div>
+                
               </Link>
             ))}
           </div>
