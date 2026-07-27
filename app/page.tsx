@@ -150,7 +150,7 @@ export default async function Home() {
       {/* ══════════ 3. PROFILS EN VEDETTE ══════════ */}
       {enVedette.length > 0 && (
         <section className="py-16 px-4 ">
-          <div className="max-w-7xl mx-auto">
+          <div className="max-w-4xl mx-auto">
             <div className="flex items-end justify-between mb-8 gap-4">
               <div>
                 <span className="text-xs font-black text-orange-500 uppercase tracking-widest bg-orange-100 px-3 py-1.5 rounded-full">
@@ -173,7 +173,7 @@ export default async function Home() {
               </Link>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-4">
               {enVedette.map((r) => (
                 <Card key={r.id} {...toCard(r)} />
               ))}
