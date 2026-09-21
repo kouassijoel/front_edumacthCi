@@ -64,7 +64,7 @@ const ETAPES_REPETITEUR = [
 function Barre({ etape, role }: { etape: number; role: Role }) {
   const etapes = role === "repetiteur" ? ETAPES_REPETITEUR : ETAPES_ELEVE;
   return (
-    <div className="w-full bg-white border-b border-zinc-100 px-4 py-4">
+    <div className="w-full bg-white  border-zinc-100 px-4 py-4">
       <div className="max-w-3xl mx-auto">
         {/* Barre linéaire */}
         <div className="flex items-center gap-2 mb-3">
@@ -244,7 +244,7 @@ export default function Inscription() {
   const derniereEtape = form.role === "repetiteur" ? ETAPES_REPETITEUR.length : ETAPES_ELEVE.length;
 
   return (
-    <div className="min-h-screen bg-zinc-50 font-sans flex flex-col">
+    <div className="min-h-screen font-sans flex flex-col bg-white">
 
       {/* Top bar */}
       <div className="w-full bg-white border-b border-zinc-100 px-6 py-3 flex items-center justify-between sticky top-0 z-50">
@@ -548,7 +548,7 @@ export default function Inscription() {
           <div className="w-full max-w-lg flex flex-col gap-6">
             <BtnRetour onClick={retour} />
             <div>
-              <h1 className="text-2xl font-extrabold text-zinc-800">Quel est votre tarif horaire ?</h1>
+              <h1 className="text-2xl font-extrabold text-zinc-800">Quel est votre tarif  du mois ?</h1>
               <p className="text-sm text-zinc-500 mt-1">Vous pourrez le modifier à tout moment depuis votre profil</p>
             </div>
             <div className="bg-white rounded-2xl border border-zinc-100 shadow-sm p-8 flex flex-col items-center gap-6">
