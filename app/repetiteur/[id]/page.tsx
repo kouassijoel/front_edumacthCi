@@ -10,7 +10,7 @@ import { favoriService } from "@/lib/services/dashboard.service";
 import { authService, type Utilisateur } from "@/lib/services/auth.service";
 import Header from "@/app/component/header";
 
-function Etoiles({ size = "base" }: { note: number; size?: "sm" | "base" | "lg" }) {
+function Etoiles({ size = "base" }: {size?: "sm" | "base" | "lg" }) {
   const cls = size === "lg" ? "text-2xl" : size === "sm" ? "text-sm" : "text-base";
   return (
     <div className="flex">
