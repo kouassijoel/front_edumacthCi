@@ -45,12 +45,12 @@ export default function Header() {
 
   return (
     <>
-      <header className="w-full bg-white  border-zinc-100  top-0 z-50 ">
+      <header className="w-full bg-orange-50  border-zinc-200  top-0 z-50 ">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 cursor-pointer" onClick={closeMobile}>
-            <div className="w-9 h-9 rounded-xl bg-orange-500 flex items-center justify-center shrink-0">
+            <div className="w-9 h-9 rounded-xl bg-orange-00 flex items-center justify-center shrink-0">
               <GraduationCap size={20} className="text-white" strokeWidth={2.2} />
             </div>
             <div className="flex items-baseline gap-0.5">

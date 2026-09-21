@@ -10,13 +10,11 @@ import { favoriService } from "@/lib/services/dashboard.service";
 import { authService, type Utilisateur } from "@/lib/services/auth.service";
 import Header from "@/app/component/header";
 
-function Etoiles({ note, size = "base" }: { note: number; size?: "sm" | "base" | "lg" }) {
+function Etoiles({ size = "base" }: { note: number; size?: "sm" | "base" | "lg" }) {
   const cls = size === "lg" ? "text-2xl" : size === "sm" ? "text-sm" : "text-base";
   return (
     <div className="flex">
-      {[1, 2, 3, 4, 5].map((i) => (
-        <span key={i} className={`${cls} ${i <= note ? "text-orange-400" : "text-zinc-200"}`}>★</span>
-      ))}
+     <span  className="text-orange-400" >★</span>
     </div>
   );
 }
@@ -556,7 +554,7 @@ export default function DetailRepetiteur({ params }: { params: Promise<{ id: str
 
   if (!rep) return (
     <div className="min-h-screen flex items-center justify-center bg-zinc-50">
-      <div className="w-8 h-8 border-4 border-orange-500 border-t-transparent rounded-full animate-spin" />
+      <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
     </div>
   );
 
@@ -565,103 +563,53 @@ export default function DetailRepetiteur({ params }: { params: Promise<{ id: str
   return (
     <div className="min-h-screen bg-white font-sans">
       <Header></Header>
-      <main className="max-w-6xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <aside className="lg:col-span-1 order-1 lg:order-2 flex flex-col gap-4 lg:sticky lg:top-6 lg:self-start">
-          <div className="bg-white rounded-3xl text-shadow-2xs drop-shadow-sm border-gray-300 p-6 flex flex-col items-center gap-4">
+      <main className="max-w-6xl mx-auto px-4 py-15 grid grid-cols-1 lg:grid-cols-3 *: gap-8">
+        <aside className="lg:col-span-1 order-1 lg:order-2  flex flex-col gap-4 lg:sticky lg:top-6 lg:self-start">
+          <div className="bg-white rounded-3xl  shadow-xl drop-shadow-sm border-gray-300 p-6 flex flex-col items-center gap-4">
             <div className="relative w-50 h-50 px-5  overflow-hidden rounded-4xl">
               <Image src={rep.photo_url ?? "https://i.pravatar.cc/300"} alt={nomComplet} fill className="object-cover" />
             </div>
             <div className="flex flex-col items-center gap-1 text-center">
               <div className="flex items-center gap-2 justify-center flex-wrap">
                 <h1 className="text-xl font-extrabold text-zinc-800">{nomComplet}</h1>
-                {rep.is_verifie && (
-                  <span className="inline-flex items-center gap-1 text-xs font-bold text-green-700 bg-green-100 px-2 py-0.5 rounded-full">
+                 <span className="inline-flex items-center gap-1 text-xs font-bold text-green-700 bg-green-100 px-2 py-0.5 rounded-full">
                     ✓ Vérifié
                   </span>
-                )}
               </div>
            
               <div className="flex items-center gap-2 mt-1">
-                <Etoiles note={Math.round(rep.note)} />
-                <span className="text-sm text-zinc-400">({rep.nb_avis} avis)</span>
+                <Etoiles/>
+                <span className="text-sm text-zinc-800">({rep.nb_avis}  évaluations)</span>
               </div>
-              {rep.ville && <p className="text-xs text-zinc-400 mt-1">📍 {rep.ville}</p>}
+              {rep.ville && <p className="text-xs text-zinc-800 mt-1">📍 {rep.ville}</p>}
             </div>
-            <div className="w-full border-t border-zinc-100 pt-4 flex items-center justify-between">
-              <span className="text-sm text-zinc-500">Tarif horaire</span>
-              <span className="text-2xl font-extrabold text-zinc-800">
-                {rep.prix_par_heure?.toLocaleString("de-DE", { maximumFractionDigits: 0 }) ?? "—"}
-                <span className="text-sm font-normal text-zinc-400"> F/Mois</span>
+            <div className="w-full  border-zinc-100 pt-1 flex items-center justify-between">
+              <span className="text-sm">Tarif horaire</span>
+              <span className="text-sm font-extrabold text-zinc-800">
+                {rep.prix_par_heure?.toLocaleString("de-DE", { maximumFractionDigits: 0 })  ?? "—"} F
+                <span className="text-sm font-normal text-zinc-400">/Mois</span>
+              </span>
+            </div>
+             <div className="w-full  pt-1 flex items-center justify-between">
+              <span className="text-sm">Élèves</span>
+              <span className=" font-extrabold text-zinc-800">
+               {rep.nb_eleves}
               </span>
             </div>
             <div className="flex gap-2 w-full">
-              <button onClick={() => ouvrirContact("contact")} className="flex-1 py-3 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl transition-colors text-sm cursor-pointer">
-                Contacter {rep.prenom}
-              </button>
-              <button
-                onClick={toggleFavori}
-                disabled={favoriLoading}
-                title={isFavori ? "Retirer des favoris" : "Ajouter aux favoris"}
-                className={`w-12 shrink-0 flex items-center justify-center rounded-xl border-2 transition-all cursor-pointer ${
-                  isFavori
-                    ? "bg-red-50 border-red-400 text-red-500 hover:bg-red-100"
-                    : "bg-white border-zinc-200 text-zinc-400 hover:border-red-300 hover:text-red-400"
-                }`}
-              >
-                <Heart size={18} className={isFavori ? "fill-red-500 text-red-500" : ""} />
-              </button>
+             <button
+              onClick={() => ouvrirContact("contact")}
+              className="flex-1 py-5 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-2xl transition-colors text-xl cursor-pointer flex items-center justify-center gap-2"
+            >
+              <MessageCircle className="w-6 h-6" />
+              Contacter
+            </button>
+             
             </div>
 
             {/* ── Partage ── */}
-            <div className="w-full border-t border-zinc-100 pt-4 flex flex-col gap-2">
-              <p className="text-xs text-zinc-400 text-center font-medium flex items-center justify-center gap-1.5">
-                <Share2 size={11} /> Partager ce profil
-              </p>
-              <div className="flex gap-2">
-                {/* WhatsApp */}
-                <button onClick={partagerWhatsApp}
-                  className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors cursor-pointer">
-                  <MessageCircle size={14} />
-                  WhatsApp
-                </button>
-                {/* Facebook */}
-                <button onClick={partagerFacebook}
-                  className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-colors cursor-pointer">
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-                  Facebook
-                </button>
-                {/* Copier lien */}
-                <button onClick={copierLien}
-                  className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${lienCopie ? "bg-green-50 border-green-400 text-green-600" : "bg-zinc-50 border-zinc-200 text-zinc-600 hover:border-orange-300 hover:text-orange-500"}`}>
-                  {lienCopie ? <Check size={14} /> : <Link2 size={14} />}
-                  {lienCopie ? "Copié !" : "Lien"}
-                </button>
-              </div>
-              {/* Partage natif (mobile) */}
-              <button onClick={partagerNatif}
-                className="w-full py-2.5 border border-zinc-200 hover:border-orange-300 text-zinc-500 hover:text-orange-500 text-xs font-semibold rounded-xl transition-colors cursor-pointer flex items-center justify-center gap-2">
-                <Share2 size={13} />
-                Plus d&apos;options de partage
-              </button>
-            </div>
+           
           </div>
-
-          <div className="bg-white rounded-2xl border border-zinc-100 shadow-sm p-5 grid grid-cols-3 gap-3 text-center">
-            {[
-              { val: rep.nb_eleves, label: "Élèves" },
-              { val: `${rep.annees_experience} ans`, label: "Expérience" },
-              { val: `${rep.note.toFixed(1)}/5`, label: "Note" },
-            ].map((s) => (
-              <div key={s.label} className="flex flex-col gap-0.5">
-                <span className="text-xl font-extrabold text-zinc-800">{s.val}</span>
-                <span className="text-xs text-zinc-400">{s.label}</span>
-              </div>
-            ))}
-          </div>
-
-         
-
-          
         </aside>
 
         <div className="lg:col-span-2 order-2 lg:order-1 flex flex-col gap-6">
@@ -677,8 +625,8 @@ export default function DetailRepetiteur({ params }: { params: Promise<{ id: str
           )}
 
           {rep.titre_annonce && (
-            <div className="rounded-2xl border-zinc-100 p-6">
-              <p className="text-4xl font-bold text-gray-700 leading-relaxed">{rep.titre_annonce}</p>
+            <div className="rounded-2xl border-zinc-100 p-3">
+              <p className="text-3xl font-bold text-gray-800 leading-relaxed">{rep.titre_annonce}</p>
             </div>
           )}
 
@@ -691,19 +639,19 @@ export default function DetailRepetiteur({ params }: { params: Promise<{ id: str
             </div>
           )}
 
-          <div className="rounded-2xl p-5 my-6 bg-orange-50 border border-orange-100">
+          <div className="rounded-2xl p-5 my-1 bg-orange-50 border border-orange-100">
             <p className="text-lg font-black mb-2 text-orange-400">⭐ Ambassadeur</p>
             <p className="text-sm text-gray-600 leading-relaxed">
               C&apos;est le nec plus ultra des professeurs. Qualité du profil, excellence du diplôme, réponse garantie. {rep.nom} organisera avec soin votre premier cours.
             </p>
           </div>
            {rep.niveaux && rep.niveaux.length > 0 && (
-            <div className="bg-white  p-5 ">
+            <div className="bg-white  p-3 ">
               <h3 className="text-2xl  text-zinc-700 font-bold mb-3">À propos du cours</h3>
               <div className="flex gap-5">
                 <div className="flex flex-wrap gap-2  rounded-2xl p-2">
                 {rep.niveaux.map((n) => (
-                  <span key={n} className="text-xs font-medium bg-gray-50 text-gray-500 border  py-2  px-6 rounded-full">{n}</span>
+                  <span key={n} className="text-xs font-medium text-gray-500 border  py-2  px-6 rounded-full">{n}</span>
                 ))}
               </div>
              
@@ -712,7 +660,7 @@ export default function DetailRepetiteur({ params }: { params: Promise<{ id: str
           )}
 
           {rep.bio && (
-            <div className=" border-zinc-100 p-6">
+            <div className=" border-zinc-100 p-3">
               <p className="text-2xl font-bold mb-4">À propos de {rep.nom}</p>
               <p className=" text-xl font-extralight leading-relaxed">{rep.bio}</p>
             </div>
@@ -742,7 +690,7 @@ export default function DetailRepetiteur({ params }: { params: Promise<{ id: str
               </div>
             </div>
             {avis.length === 0 ? (
-              <div className="text-center py-8 flex flex-col items-center gap-2">
+              <div className="text-center py- flex flex-col items-center gap-2">
                 <span className="text-4xl">⭐</span>
                 <p className="text-sm text-zinc-400">Aucun avis pour le moment.</p>
                 <p className="text-xs text-zinc-300">Soyez le premier à laisser un commentaire !</p>
@@ -750,17 +698,17 @@ export default function DetailRepetiteur({ params }: { params: Promise<{ id: str
             ) : (
               <div className="flex flex-col gap-4 ">
                 {avis.map((a) => (
-                  <div key={a.id} className=" pb-4 last:pb-0 ">
-                   <div className="border rounded-2xl p-5">
+                  <div key={a.id} className="last:pb-0 ">
+                   <div className="border border-gray-400 rounded-4xl p-5">
                      <div className="flex items-center justify-between mb-2  ">
                       <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 font-bold text-sm shrink-0">
                           {a.eleve.prenom[0]}
                         </div>
                         <div className="flex gap-2.5">
-                          <div><p className="text-sm font-bold text-zinc-800">{a.eleve.prenom} {a.eleve.nom}</p></div>
+                          <div><p className="text-sm font-bold text-gray-500">{a.eleve.prenom} {a.eleve.nom}</p></div>
                           <div>
-                            <p className="text-xs text-gray-500 font-bold">
+                            <p className="text-xs text-gray-60000 font-bold">
                             {new Date(a.created_at).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
                           </p>
                           </div>
@@ -772,13 +720,13 @@ export default function DetailRepetiteur({ params }: { params: Promise<{ id: str
                         ))}
                       </div>
                     </div>
-                    <p className="text-sm text-zinc-900 leading-relaxed px-4 py-3 ml-12">
+                    <p className="text-sm text-zinc-900 leading-relaxed px-3 py-3 ml-12">
                       {a.commentaire}
                     </p>
                    </div>
 
                     {a.reponse && (
-                      <div className="ml-12 bg-orange-50 border border-orange-100 p-4 rounded-2xl my-4">
+                      <div className="ml-50 bg-orange-50 border border-orange-100 p-3 rounded-2xl my-3">
                         <div className="rounded-2xl p-4 flex gap-3">
                           <div className="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold text-xs shrink-0 mt-0.5">
                             {rep.prenom[0]}
@@ -813,19 +761,20 @@ export default function DetailRepetiteur({ params }: { params: Promise<{ id: str
       {similaires.length > 0 && (
         <section className="max-w-6xl mx-auto px-4 py-10">
           <h2 className="text-xl font-extrabold text-zinc-800 mb-5">Répétiteurs similaires</h2>
-          <div className="flex gap-4 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:grid lg:grid-cols-5 lg:overflow-x-visible">
+          <div className=" gap-4  overflow-x-auto   pb-2 scrollbar-none [&::-webkit-scrollbar]:hidden lg:grid lg:grid-cols-4 lg:overflow-x-visible">
             {similaires.map((s) => (
-              <Link key={s.id} href={`/repetiteur/${s.id}`}
-                className="group flex flex-col overflow-hidden  transition-shadow shrink-0 w-44 sm:w-52 lg:w-auto lg:shrink">
+              <div className="grid-cols-3 shadow rounded-2xl  pb-7">
+                <Link key={s.id} href={`/repetiteur/${s.id}`}
+                className="group flex flex-col overflow-hidden  transition-shadow shrink-0  sm:w-52 lg:w-auto lg:shrink">
 
                 {/* Photo + infos superposées */}
-                <div className="relative h-56 w-full">
+                <div className="relative h-70 ">
                   <Image
                     src={s.photo_url ?? `https://i.pravatar.cc/300?u=${s.id}`}
                     alt={`${s.prenom} ${s.nom}`}
                     fill
                     loading="lazy"
-                    className="object-cover  group-hover:scale-105 w-100 transition-transform duration-500"
+                    className="object-cover rounded-2xl  group-hover:scale-105 w-100 transition-transform duration-500"
                   />
                   
                   <div className="absolute bottom-3 left-3 right-3">
@@ -855,6 +804,7 @@ export default function DetailRepetiteur({ params }: { params: Promise<{ id: str
                 </div>
                 
               </Link>
+              </div>
             ))}
           </div>
         </section>
